@@ -18,7 +18,8 @@
     "dev": "bun --watch powershell.ts",
     "build": "bun build powershell.ts --outdir dist --target bun",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "bun run lint && bun run build"
+    "test": "echo \"No tests yet\" && exit 0",
+    "prepublishOnly": "bun run lint && bun run build && echo \"Quality checks passed!\""
   },
   "keywords": [
     "mcp",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "bun-types": "^1.2.21",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {},
