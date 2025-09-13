@@ -2,12 +2,12 @@
   "name": "mcp-powershell-exec",
   "version": "1.0.0",
   "description": "PowerShell MCP server with improved architecture using Bun and TypeScript",
-  "main": "server.ts",
+  "main": "powershell.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run server.ts",
-    "dev": "bun --watch server.ts",
-    "build": "bun build server.ts --outdir dist --target bun",
+    "start": "bun run powershell.ts",
+    "dev": "bun --watch powershell.ts",
+    "build": "bun build powershell.ts --outdir dist --target bun",
     "lint": "tsc --noEmit"
   },
   "keywords": ["mcp", "powershell", "bun", "typescript"],

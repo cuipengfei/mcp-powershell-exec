@@ -18,6 +18,13 @@ class ExecutionConfig {
   static readonly MAX_COMMAND_LENGTH = 10000;
   static readonly GRACEFUL_TERMINATION_TIMEOUT = 5;
   static readonly POWERSHELL_FLAGS = ["-NonInteractive", "-NoProfile", "-ExecutionPolicy", "Bypass"];
+
+  // Error message templates
+  static readonly ERROR_EMPTY_COMMAND = "Empty command provided";
+  static readonly ERROR_COMMAND_TOO_LONG = `Command too long (max ${ExecutionConfig.MAX_COMMAND_LENGTH} characters)`;
+  static readonly ERROR_NO_EXECUTABLE = "No PowerShell executable found on system";
+  static readonly ERROR_TIMEOUT = (timeout: number) => `Command timed out after ${timeout} seconds`;
+  static readonly ERROR_UNEXPECTED = (error: unknown) => `Unexpected error occurred: ${error}`;
 }
 
 // PowerShell executable detector
@@ -50,11 +57,11 @@ class PowerShellExecutableDetector {
 class CommandValidator {
   static validate(code: string): string | null {
     if (!code || !code.trim()) {
-      return "Empty command provided";
+      return ExecutionConfig.ERROR_EMPTY_COMMAND;
     }
 
     if (code.length > ExecutionConfig.MAX_COMMAND_LENGTH) {
-      return `Command too long (max ${ExecutionConfig.MAX_COMMAND_LENGTH} characters)`;
+      return ExecutionConfig.ERROR_COMMAND_TOO_LONG;
     }
 
     return null;
@@ -72,36 +79,22 @@ class ProcessManager {
   }> {
     const cmd = [executable, ...ExecutionConfig.POWERSHELL_FLAGS, "-Command", code];
 
-    this.logger.info(`Executing PowerShell command (exe: ${executable}, length: ${code.length}, timeout: ${timeout}s)`);
+    this.logger.info(`Executing PowerShell: ${executable}, length: ${code.length}, timeout: ${timeout || 'none'}s`);
 
     return new Promise((resolve, reject) => {
-      const process = spawn(cmd[0], cmd.slice(1), {
-        stdio: "pipe",
-      });
-
+      const process = spawn(cmd[0], cmd.slice(1), { stdio: "pipe" });
       let stdout = "";
       let stderr = "";
       let timeoutId: NodeJS.Timeout | null = null;
 
-      if (process.stdout) {
-        process.stdout.on("data", (data) => {
-          stdout += data.toString();
-        });
-      }
+      // Setup data handlers
+      process.stdout?.on("data", (data) => stdout += data.toString());
+      process.stderr?.on("data", (data) => stderr += data.toString());
 
-      if (process.stderr) {
-        process.stderr.on("data", (data) => {
-          stderr += data.toString();
-        });
-      }
-
+      // Setup completion handlers
       process.on("close", (code) => {
         if (timeoutId) clearTimeout(timeoutId);
-        resolve({
-          stdout: stdout.trim(),
-          stderr: stderr.trim(),
-          exitCode: code || 0,
-        });
+        resolve({ stdout: stdout.trim(), stderr: stderr.trim(), exitCode: code || 0 });
       });
 
       process.on("error", (error) => {
@@ -109,16 +102,13 @@ class ProcessManager {
         reject(error);
       });
 
-      // Handle timeout
+      // Setup timeout if specified
       if (timeout > 0) {
-        this.logger.info(`Executing PowerShell command with ${timeout} second timeout`);
         timeoutId = setTimeout(() => {
-          this.logger.warn(`PowerShell command timed out after ${timeout} seconds, terminating process`);
+          this.logger.warn(`Command timed out after ${timeout}s, terminating`);
           this.terminateProcessGracefully(process);
-          reject(new Error(`Command timed out after ${timeout} seconds`));
+          reject(new Error(ExecutionConfig.ERROR_TIMEOUT(timeout)));
         }, timeout * 1000);
-      } else {
-        this.logger.info("Executing PowerShell command with no timeout");
       }
     });
   }
@@ -141,22 +131,16 @@ class ResultFormatter {
   formatResult(stdout: string, stderr: string, exitCode: number): string {
     if (exitCode !== 0) {
       const errorMsg = stderr || `Command failed with exit code ${exitCode}`;
-      this.logger.warn(`PowerShell command failed: ${errorMsg}`);
+      this.logger.warn(`PowerShell failed: ${errorMsg}`);
       return `Error: ${errorMsg}`;
     }
 
-    let result = stdout;
-
     if (stderr) {
-      this.logger.info(`PowerShell stderr (non-fatal): ${stderr}`);
-      if (result) {
-        result += `\n[Warning: ${stderr}]`;
-      } else {
-        result = `[Warning: ${stderr}]`;
-      }
+      this.logger.info(`PowerShell warning: ${stderr}`);
+      return stdout ? `${stdout}\n[Warning: ${stderr}]` : `[Warning: ${stderr}]`;
     }
 
-    return result;
+    return stdout;
   }
 }
 
@@ -181,7 +165,7 @@ class PowerShellExecutor {
 
   async execute(code: string, timeout: number = ExecutionConfig.DEFAULT_TIMEOUT): Promise<string> {
     if (!this.executable) {
-      return "Error: No PowerShell executable found on system";
+      return `Error: ${ExecutionConfig.ERROR_NO_EXECUTABLE}`;
     }
 
     const validationError = this.validator.validate(code);
@@ -197,10 +181,9 @@ class PowerShellExecutor {
       );
       return this.formatter.formatResult(stdout, stderr, exitCode);
     } catch (error) {
-      if (error instanceof Error && error.message.includes("timed out")) {
-        return `Error: ${error.message}`;
-      }
-      return `Error: Unexpected error occurred: ${error}`;
+      return error instanceof Error && error.message.includes("timed out")
+        ? `Error: ${error.message}`
+        : `Error: ${ExecutionConfig.ERROR_UNEXPECTED(error)}`;
     }
   }
 }

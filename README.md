@@ -39,7 +39,7 @@ To use this MCP server with Claude Code:
 
 1. **Install the server globally**:
    ```bash
-   claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/server.ts
+   claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/powershell.ts
    ```
 
 2. **Verify connection**:
@@ -55,7 +55,7 @@ Configure your MCP client with:
   "servers": {
     "powershell-integration": {
       "command": "bun",
-      "args": ["run", "/path/to/mcp-powershell-exec/server.ts"],
+      "args": ["run", "/path/to/mcp-powershell-exec/powershell.ts"],
       "env": {}
     }
   }
@@ -94,7 +94,7 @@ The server follows SOLID principles with clear separation of concerns:
 - **PowerShell Priority**: PowerShell 7 (pwsh) > Windows PowerShell 5.1 (powershell)
 
 ### Customization
-Modify `ExecutionConfig` class in `server.ts` to adjust settings:
+Modify `ExecutionConfig` class in `powershell.ts` to adjust settings:
 ```typescript
 class ExecutionConfig {
   static readonly DEFAULT_TIMEOUT = 300;
