@@ -1,6 +1,6 @@
 {
   "name": "mcp-powershell-exec",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "PowerShell MCP server with improved SOLID architecture. Supports both Bun and Node.js runtimes.",
   "main": "dist/powershell.js",
   "type": "module",

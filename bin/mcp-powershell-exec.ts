@@ -6,12 +6,15 @@
  */
 
 import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 // Get the directory of this script
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const serverPath = resolve(__dirname, "..", "powershell.js");
+
+// Convert to proper file URL for cross-platform compatibility
+const serverUrl = pathToFileURL(serverPath);
 
 // Detect runtime
 const runtime = typeof Bun !== 'undefined' ? 'Bun' : 'Node.js';
@@ -20,7 +23,7 @@ const runtime = typeof Bun !== 'undefined' ? 'Bun' : 'Node.js';
 async function main() {
   try {
     console.info(`Starting PowerShell MCP server (${runtime})...`);
-    await import(serverPath);
+    await import(serverUrl.href);
   } catch (error) {
     console.error("Failed to start PowerShell MCP server:", error);
     process.exit(1);
