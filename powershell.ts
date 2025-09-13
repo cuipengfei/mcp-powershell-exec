@@ -211,17 +211,17 @@ async function main() {
       tools: [
         {
           name: "run_powershell",
-          description: "Runs PowerShell code and returns the output",
+          description: "Runs PowerShell code and returns the output. WARNING: Interactive commands (requiring user input like 'npm login', 'Read-Host', 'Get-Credential') are NOT supported and will cause timeout. Use non-interactive alternatives or environment variables for authentication.",
           inputSchema: {
             type: "object",
             properties: {
               code: {
                 type: "string",
-                description: "The PowerShell code to execute",
+                description: "The PowerShell code to execute. Must be non-interactive (no user input required). Max length: 10,000 characters.",
               },
               timeout: {
                 type: "number",
-                description: "Timeout in seconds (default: 300 = 5 minutes, 0 = no timeout)",
+                description: "Timeout in seconds (default: 300 = 5 minutes, 0 = no timeout). Commands will be forcibly terminated after timeout to prevent hanging on interactive prompts.",
                 default: ExecutionConfig.DEFAULT_TIMEOUT,
               },
             },
@@ -270,7 +270,7 @@ async function main() {
   // Start the server
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("PowerShell MCP server running...");
+  console.info("PowerShell MCP server running...");
 }
 
 main().catch(console.error);

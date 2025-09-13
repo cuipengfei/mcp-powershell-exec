@@ -1,22 +1,21 @@
 {
   "name": "mcp-powershell-exec",
   "version": "1.0.0",
-  "description": "PowerShell MCP server with improved SOLID architecture using Bun and TypeScript. Easy installation with bunx.",
-  "main": "powershell.ts",
+  "description": "PowerShell MCP server with improved SOLID architecture. Supports both Bun and Node.js runtimes.",
+  "main": "dist/powershell.js",
   "type": "module",
   "bin": {
-    "mcp-powershell-exec": "./bin/mcp-powershell-exec.ts"
+    "mcp-powershell-exec": "./dist/bin/mcp-powershell-exec.js"
   },
   "files": [
-    "powershell.ts",
-    "bin/",
+    "dist/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "start": "bun run powershell.ts",
     "dev": "bun --watch powershell.ts",
-    "build": "bun build powershell.ts --outdir dist --target bun",
+    "build": "tsc --project tsconfig.build.json && bun build powershell.ts --outdir dist --target node --format esm && bun build bin/mcp-powershell-exec.ts --outdir dist/bin --target node --format esm",
     "lint": "tsc --noEmit",
     "test": "echo \"No tests yet\" && exit 0",
     "prepublishOnly": "bun run lint && bun run build && echo \"Quality checks passed!\""
@@ -25,6 +24,7 @@
     "mcp",
     "powershell",
     "bun",
+    "node",
     "typescript",
     "claude",
     "anthropic",
@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/node": "^24.3.3",
     "bun-types": "^1.2.21",
     "typescript": "^5.9.2"
   },
@@ -56,6 +57,7 @@
     "@modelcontextprotocol/sdk": "^1.18.0"
   },
   "engines": {
+    "node": ">=18.0.0",
     "bun": ">=1.0.0"
   }
 }
