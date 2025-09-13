@@ -1,133 +1,71 @@
-# MCP PowerShell Exec Server (TypeScript/Bun)
+# MCP PowerShell 执行服务器
 
-## Overview
-A modern PowerShell MCP server built with TypeScript and Bun runtime. This server accepts PowerShell scripts as strings, executes them securely, and returns the output, enabling AI assistants to understand and work with PowerShell effectively.
+[English](README_EN.md) | 中文
 
-## Features
-- **TypeScript**: Full type safety and modern JavaScript features
-- **Bun Runtime**: Fast execution with native performance
-- **SOLID Architecture**: Clean, maintainable, and extensible codebase
-- **PowerShell Integration**: Supports both PowerShell 7 and Windows PowerShell 5.1
-- **Flexible Timeout**: Configurable command execution timeouts
-- **Comprehensive Error Handling**: Graceful process management and error reporting
-- **Security**: Non-interactive execution with controlled environment
-- **Easy Installation**: Available via bunx for zero-setup usage
+使用 TypeScript 和 Bun 构建的 PowerShell MCP 服务器，让 AI 助手能够执行 PowerShell 命令并获取结果。
 
-## 🚀 Quick Start with bunx (Recommended)
+## 特性
 
-The easiest way to use this MCP server is with `bunx` - no installation or setup required:
+- TypeScript + Bun 运行时
+- 支持 PowerShell 7 和 Windows PowerShell 5.1
+- 可配置超时时间
+- 安全的非交互式执行
+- 通过 bunx 零配置安装
+
+## 快速开始
 
 ```bash
-# Add to Claude Code MCP configuration
+# 使用 bunx 安装（推荐）
 claude mcp add powershell-integration --scope user bunx mcp-powershell-exec
 ```
 
-That's it! The server will be downloaded and configured automatically.
+## 其他安装方式
 
-## 📦 Alternative Installation Methods
-
-### Global Installation
-
+### 全局安装
 ```bash
-# Install globally with bun
 bun add -g mcp-powershell-exec
-
-# Add to Claude Code
 claude mcp add powershell-integration --scope user bun mcp-powershell-exec
 ```
 
-### Manual Installation
-
+### 手动安装
 ```bash
-# Clone the repository
 git clone https://github.com/cuipengfei/mcp-powershell-exec.git
 cd mcp-powershell-exec
-
-# Install dependencies
 bun install
-
-# Add to Claude Code
 claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/powershell.ts
 ```
 
-### Alternative Integration (VSCode/Other MCP Clients)
-
-Configure your MCP client with:
+### 其他 MCP 客户端配置
 ```json
 {
   "servers": {
     "powershell-integration": {
       "command": "bun",
-      "args": ["run", "/path/to/mcp-powershell-exec/powershell.ts"],
-      "env": {}
+      "args": ["run", "/path/to/mcp-powershell-exec/powershell.ts"]
     }
   }
 }
 ```
 
-## Development
+## 开发
 
-### Scripts
 ```bash
-# Start development server with watch mode
-bun run dev
-
-# Build the project
-bun run build
-
-# Type checking
-bun run lint
+bun run dev    # 开发模式
+bun run build  # 构建
+bun run lint   # 类型检查
 ```
 
-### Architecture
+## 配置
 
-The server follows SOLID principles with clear separation of concerns:
+- 默认超时：300 秒
+- 最大命令长度：10,000 字符
+- PowerShell 优先级：PowerShell 7 > Windows PowerShell 5.1
 
-- **PowerShellExecutableDetector**: Detects and selects best PowerShell version
-- **CommandValidator**: Validates input commands for security and constraints
-- **ProcessManager**: Handles PowerShell process execution and lifecycle
-- **ResultFormatter**: Formats execution results and error messages
-- **PowerShellExecutor**: Main coordinator orchestrating all components
+## 系统要求
 
-## Configuration
+- Bun 1.0+
+- PowerShell 7.x（推荐）或 5.1+
 
-### Default Settings
-- **Timeout**: 300 seconds (5 minutes)
-- **Max Command Length**: 10,000 characters
-- **PowerShell Priority**: PowerShell 7 (pwsh) > Windows PowerShell 5.1 (powershell)
+## 许可证
 
-### Customization
-Modify `ExecutionConfig` class in `powershell.ts` to adjust settings:
-```typescript
-class ExecutionConfig {
-  static readonly DEFAULT_TIMEOUT = 300;
-  static readonly MAX_COMMAND_LENGTH = 10000;
-  // ... other settings
-}
-```
-
-## System Requirements
-
-- **Bun**: 1.0+ (primary runtime)
-- **PowerShell**: 7.x recommended, 5.1+ supported
-- **TypeScript**: 5.x (for development)
-- **Node.js**: Not required (Bun replaces Node.js)
-
-## Migration from Python
-
-This server was migrated from Python to TypeScript/Bun for:
-- **Better Performance**: Faster startup and execution times
-- **Type Safety**: Compile-time error detection
-- **Modern Tooling**: Native TypeScript support
-- **Simplified Dependencies**: Single runtime (Bun) vs Python + pip
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For issues and questions:
-- Create an issue in this GitHub repository
-- Check existing issues for common problems
-- Provide PowerShell version and error details when reporting bugs
+MIT License

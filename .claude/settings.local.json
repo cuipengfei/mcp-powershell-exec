@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__powershell-integration__run_powershell"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
