@@ -1,68 +1,122 @@
-# MCP PowerShell Exec Server
+# MCP PowerShell Exec Server (TypeScript/Bun)
 
 ## Overview
-MCP PowerShell Exec Server is a lightweight server that accepts PowerShell scripts as strings, executes them, and returns the output. Enabling AI assistants to understand and work with PowerShell.
+A modern PowerShell MCP server built with TypeScript and Bun runtime. This server accepts PowerShell scripts as strings, executes them securely, and returns the output, enabling AI assistants to understand and work with PowerShell effectively.
 
 ## Features
-- Accepts PowerShell scripts via string input
-- Executes scripts securely in an MCP Server environment
-- Returns execution results in real-time
+- **TypeScript**: Full type safety and modern JavaScript features
+- **Bun Runtime**: Fast execution with native performance
+- **SOLID Architecture**: Clean, maintainable, and extensible codebase
+- **PowerShell Integration**: Supports both PowerShell 7 and Windows PowerShell 5.1
+- **Flexible Timeout**: Configurable command execution timeouts
+- **Comprehensive Error Handling**: Graceful process management and error reporting
+- **Security**: Non-interactive execution with controlled environment
 
 ## Installation
-Clone the repository and set up the server:
 
-```powershell
-git clone https://github.com/yourusername/mcp-powershell-exec.git
+### Prerequisites
+- **Bun**: Version 1.0 or higher ([Install Bun](https://bun.sh/))
+- **PowerShell**: Version 7.x (preferred) or Windows PowerShell 5.1
+
+### Setup
+```bash
+# Clone the repository
+git clone https://github.com/cuipengfei/mcp-powershell-exec.git
 cd mcp-powershell-exec
+
+# Install dependencies
+bun install
+
+# Start the server
+bun run start
 ```
-## In Action
-
-Watch the video to see MCP PowerShell Exec Server in action:
-
-<a href="https://youtu.be/XmYaCJ0bNsE"><img src="https://img.youtube.com/vi/XmYaCJ0bNsE/0.jpg" width="600"/></a>
 
 ## Usage
 
-### Integration with GitHub Copilot in VSCode Insiders
+### Integration with Claude Code
 
-To use this MCP server with GitHub Copilot in VSCode Insiders, follow these steps:
+To use this MCP server with Claude Code:
 
-1. **Install VSCode Insiders**
-   - Download and install the latest version of [VSCode Insiders](https://code.visualstudio.com/insiders/)
-
-1. **Install GitHub Copilot Extension**
-   - Open VSCode Insiders
-   - Go to the Extensions marketplace
-   - Search for and install "GitHub Copilot"
-
-3. **Configure MCP Server**
-   - Open .vscode/mcp.json
-   ```json
-   {
-    "servers": {
-        "powershell-integration": {
-            "command": "py", // Python executable
-            "args": [
-               "drive:/yourpath/server.py"
-            ],
-            "env": {}
-        }
-    }
-   }
+1. **Install the server globally**:
+   ```bash
+   claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/server.ts
    ```
-   Replace the path with the actual path to your `server.py` file.
-   
 
-1. **Enable Agent Mode**
-   - Open Copilot chat in VSCode Insiders
-   - Click on "Copilot Edits"
-   - Choose "Agent mode"
-   - Click the refresh button in the chat input to load the available tools
+2. **Verify connection**:
+   ```bash
+   claude mcp list
+   ```
+
+### Alternative Integration (VSCode/Other MCP Clients)
+
+Configure your MCP client with:
+```json
+{
+  "servers": {
+    "powershell-integration": {
+      "command": "bun",
+      "args": ["run", "/path/to/mcp-powershell-exec/server.ts"],
+      "env": {}
+    }
+  }
+}
+```
+
+## Development
+
+### Scripts
+```bash
+# Start development server with watch mode
+bun run dev
+
+# Build the project
+bun run build
+
+# Type checking
+bun run lint
+```
+
+### Architecture
+
+The server follows SOLID principles with clear separation of concerns:
+
+- **PowerShellExecutableDetector**: Detects and selects best PowerShell version
+- **CommandValidator**: Validates input commands for security and constraints
+- **ProcessManager**: Handles PowerShell process execution and lifecycle
+- **ResultFormatter**: Formats execution results and error messages
+- **PowerShellExecutor**: Main coordinator orchestrating all components
+
+## Configuration
+
+### Default Settings
+- **Timeout**: 300 seconds (5 minutes)
+- **Max Command Length**: 10,000 characters
+- **PowerShell Priority**: PowerShell 7 (pwsh) > Windows PowerShell 5.1 (powershell)
+
+### Customization
+Modify `ExecutionConfig` class in `server.ts` to adjust settings:
+```typescript
+class ExecutionConfig {
+  static readonly DEFAULT_TIMEOUT = 300;
+  static readonly MAX_COMMAND_LENGTH = 10000;
+  // ... other settings
+}
+```
 
 ## System Requirements
 
-- **Python**: Version 3.10 or higher (required for optimal performance)
-- **PowerShell**: Version 5.1 
+- **Bun**: 1.0+ (primary runtime)
+- **PowerShell**: 7.x recommended, 5.1+ supported
+- **TypeScript**: 5.x (for development)
+- **Node.js**: Not required (Bun replaces Node.js)
+
+## Migration from Python
+
+This server was migrated from Python to TypeScript/Bun for:
+- **Better Performance**: Faster startup and execution times
+- **Type Safety**: Compile-time error detection
+- **Modern Tooling**: Native TypeScript support
+- **Simplified Dependencies**: Single runtime (Bun) vs Python + pip
 
 ## License
 
@@ -71,4 +125,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For issues and questions:
-- Create an issue in this GitHub repository   
+- Create an issue in this GitHub repository
+- Check existing issues for common problems
+- Provide PowerShell version and error details when reporting bugs
