@@ -15,6 +15,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - No test framework is currently configured (tests show "No tests yet")
 - Pre-publish checks run automatically via `prepublishOnly` script
 
+### Publishing and Version Management
+- `npm version patch` - Bump patch version
+- `bun run build` - Build before publishing (always run lint first)
+- `npm publish --access public` - Publish to npm registry
+- After publishing, update MCP configuration to use new version
+- Always test the published version, not local source
+
+### MCP Testing Workflow
+When testing MCP tool functionality, follow this workflow:
+1. `claude mcp remove powershell-integration` - Remove existing MCP configuration
+2. `claude mcp add powershell-integration --scope user bunx mcp-powershell-exec@latest` - Add updated package
+3. `claude mcp list` - Verify configuration is correct
+4. Test functionality using the mcp__powershell-integration__run_powershell tool
+5. For version-specific testing: `bunx mcp-powershell-exec@1.0.4 --help` to verify exact version
+6. Clear Bun cache if needed: `bun pm cache rm` to force fresh package download
+
+## Important Development Notes
+
+### Quality Standards
+- **Never skip lint or tsc** - Always ensure TypeScript compilation passes before committing
+- Use `console.info()` for informational messages, not `console.error()`
+- Interactive commands (like `npm login`) will cause MCP tool timeouts - use non-interactive alternatives
+
+### Dual Runtime Support
+- Supports both Bun (primary development) and Node.js (user compatibility)
+- Binary entry point detects runtime: `typeof Bun !== 'undefined' ? 'Bun' : 'Node.js'`
+- Uses `pathToFileURL()` for cross-platform ESM module loading on Windows
+
 ## Architecture Overview
 
 This is a Model Context Protocol (MCP) server that provides PowerShell execution capabilities to AI assistants. The codebase follows SOLID principles with clear separation of concerns:
