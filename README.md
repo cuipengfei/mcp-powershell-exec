@@ -11,14 +11,33 @@ A modern PowerShell MCP server built with TypeScript and Bun runtime. This serve
 - **Flexible Timeout**: Configurable command execution timeouts
 - **Comprehensive Error Handling**: Graceful process management and error reporting
 - **Security**: Non-interactive execution with controlled environment
+- **Easy Installation**: Available via bunx for zero-setup usage
 
-## Installation
+## 🚀 Quick Start with bunx (Recommended)
 
-### Prerequisites
-- **Bun**: Version 1.0 or higher ([Install Bun](https://bun.sh/))
-- **PowerShell**: Version 7.x (preferred) or Windows PowerShell 5.1
+The easiest way to use this MCP server is with `bunx` - no installation or setup required:
 
-### Setup
+```bash
+# Add to Claude Code MCP configuration
+claude mcp add powershell-integration --scope user bunx mcp-powershell-exec
+```
+
+That's it! The server will be downloaded and configured automatically.
+
+## 📦 Alternative Installation Methods
+
+### Global Installation
+
+```bash
+# Install globally with bun
+bun add -g mcp-powershell-exec
+
+# Add to Claude Code
+claude mcp add powershell-integration --scope user bun mcp-powershell-exec
+```
+
+### Manual Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/cuipengfei/mcp-powershell-exec.git
@@ -27,25 +46,9 @@ cd mcp-powershell-exec
 # Install dependencies
 bun install
 
-# Start the server
-bun run start
+# Add to Claude Code
+claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/powershell.ts
 ```
-
-## Usage
-
-### Integration with Claude Code
-
-To use this MCP server with Claude Code:
-
-1. **Install the server globally**:
-   ```bash
-   claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-exec/powershell.ts
-   ```
-
-2. **Verify connection**:
-   ```bash
-   claude mcp list
-   ```
 
 ### Alternative Integration (VSCode/Other MCP Clients)
 

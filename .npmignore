@@ -1,0 +1,40 @@
+# Development files
+*.log
+*.swp
+*.swo
+.DS_Store
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Build artifacts
+dist/
+node_modules/
+.bun-cache/
+
+# Test files
+test/
+tests/
+*.test.ts
+*.spec.ts
+
+# Documentation source
+docs/
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+
+# Dependency lock files (keep bun.lock)
+package-lock.json
+yarn.lock

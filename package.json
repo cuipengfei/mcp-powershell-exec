@@ -1,24 +1,55 @@
 {
   "name": "mcp-powershell-exec",
   "version": "1.0.0",
-  "description": "PowerShell MCP server with improved architecture using Bun and TypeScript",
+  "description": "PowerShell MCP server with improved SOLID architecture using Bun and TypeScript. Easy installation with bunx.",
   "main": "powershell.ts",
   "type": "module",
+  "bin": {
+    "mcp-powershell-exec": "./bin/mcp-powershell-exec.ts"
+  },
+  "files": [
+    "powershell.ts",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "bun run powershell.ts",
     "dev": "bun --watch powershell.ts",
     "build": "bun build powershell.ts --outdir dist --target bun",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "bun run lint && bun run build"
   },
-  "keywords": ["mcp", "powershell", "bun", "typescript"],
-  "author": "cuipengfei",
+  "keywords": [
+    "mcp",
+    "powershell",
+    "bun",
+    "typescript",
+    "claude",
+    "anthropic",
+    "model-context-protocol",
+    "windows",
+    "automation",
+    "script-execution"
+  ],
+  "author": {
+    "name": "cuipengfei",
+    "url": "https://github.com/cuipengfei"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cuipengfei/mcp-powershell-exec.git"
+  },
+  "homepage": "https://github.com/cuipengfei/mcp-powershell-exec#readme",
+  "bugs": {
+    "url": "https://github.com/cuipengfei/mcp-powershell-exec/issues"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.9.2"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.0"
   },
