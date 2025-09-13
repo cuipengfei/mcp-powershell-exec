@@ -6,25 +6,33 @@ A PowerShell MCP server built with TypeScript and Bun, enabling AI assistants to
 
 ## Features
 
-- TypeScript + Bun runtime
+- Supports Bun and Node.js runtimes
 - Supports PowerShell 7 and Windows PowerShell 5.1
 - Configurable timeout
 - Secure non-interactive execution
-- Zero-setup installation via bunx
+- Zero-setup installation via bunx or npx
 
 ## Quick Start
 
 ```bash
-# Install with bunx (recommended)
+# Install with bunx (recommended for Bun users)
 claude mcp add powershell-integration --scope user bunx mcp-powershell-exec
+
+# Or install with npx (for Node.js users)
+claude mcp add powershell-integration --scope user npx mcp-powershell-exec
 ```
 
 ## Alternative Installation
 
 ### Global Installation
 ```bash
+# Bun users
 bun add -g mcp-powershell-exec
 claude mcp add powershell-integration --scope user bun mcp-powershell-exec
+
+# Node.js users
+npm install -g mcp-powershell-exec
+claude mcp add powershell-integration --scope user node mcp-powershell-exec
 ```
 
 ### Manual Installation
@@ -40,8 +48,8 @@ claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-e
 {
   "servers": {
     "powershell-integration": {
-      "command": "bun",
-      "args": ["run", "/path/to/mcp-powershell-exec/powershell.ts"]
+      "command": "node",
+      "args": ["/path/to/global/mcp-powershell-exec"]
     }
   }
 }
@@ -63,7 +71,7 @@ bun run lint   # Type checking
 
 ## System Requirements
 
-- Bun 1.0+
+- Bun 1.0+ or Node.js 18+
 - PowerShell 7.x (recommended) or 5.1+
 
 ## License

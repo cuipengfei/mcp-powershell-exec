@@ -6,25 +6,33 @@
 
 ## 特性
 
-- TypeScript + Bun 运行时
+- 支持 Bun 和 Node.js 运行时
 - 支持 PowerShell 7 和 Windows PowerShell 5.1
 - 可配置超时时间
 - 安全的非交互式执行
-- 通过 bunx 零配置安装
+- 通过 bunx 或 npx 零配置安装
 
 ## 快速开始
 
 ```bash
-# 使用 bunx 安装（推荐）
+# 使用 bunx（推荐，Bun 用户）
 claude mcp add powershell-integration --scope user bunx mcp-powershell-exec
+
+# 或使用 npx（Node.js 用户）
+claude mcp add powershell-integration --scope user npx mcp-powershell-exec
 ```
 
 ## 其他安装方式
 
 ### 全局安装
 ```bash
+# Bun 用户
 bun add -g mcp-powershell-exec
 claude mcp add powershell-integration --scope user bun mcp-powershell-exec
+
+# Node.js 用户
+npm install -g mcp-powershell-exec
+claude mcp add powershell-integration --scope user node mcp-powershell-exec
 ```
 
 ### 手动安装
@@ -40,8 +48,8 @@ claude mcp add powershell-integration --scope user bun /path/to/mcp-powershell-e
 {
   "servers": {
     "powershell-integration": {
-      "command": "bun",
-      "args": ["run", "/path/to/mcp-powershell-exec/powershell.ts"]
+      "command": "node",
+      "args": ["/path/to/global/mcp-powershell-exec"]
     }
   }
 }
@@ -63,7 +71,7 @@ bun run lint   # 类型检查
 
 ## 系统要求
 
-- Bun 1.0+
+- Bun 1.0+ 或 Node.js 18+
 - PowerShell 7.x（推荐）或 5.1+
 
 ## 许可证
